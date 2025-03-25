@@ -30,3 +30,4 @@ Thumbs.db
 
 # Application specific
 resources/config.json
+resources/package_cache.json

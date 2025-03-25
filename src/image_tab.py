@@ -16,7 +16,7 @@ import os
 import traceback
 
 from src.utils import generate_unique_id, get_color_for_line
-from src.image_processing import load_image, adjust_image
+from src.image_processing import load_image, adjust_image, load_image_from_clipboard
 
 class ImageTab(ttk.Frame):
     """
@@ -322,6 +322,10 @@ class ImageTab(ttk.Frame):
                 # Update status
                 points_count = len(self.profile_lines[self.current_line_id]['points'])
                 self.app.set_status(f"Removed last point. {points_count} points remaining.")
+        
+        # Check for Ctrl+V to paste image from clipboard
+        elif event.key == 'ctrl+v':
+            self.paste_image_from_clipboard()
     
     def on_image_motion(self, event):
         """Handle mouse movement over the image"""
@@ -417,6 +421,40 @@ class ImageTab(ttk.Frame):
                 x = [p1[0] - nx, p1[0] + nx, p2[0] + nx, p2[0] - nx]
                 y = [p1[1] - ny, p1[1] + ny, p2[1] + ny, p2[1] - ny]
                 self.image_ax.fill(x, y, color=color, alpha=alpha)
+    
+    def paste_image_from_clipboard(self):
+        """Paste an image from the clipboard"""
+        try:
+            # Load image from clipboard
+            self.orig_image, self.image = load_image_from_clipboard()
+            
+            # Check if clipboard contained an image
+            if self.image is None:
+                self.app.set_status("No image found in clipboard")
+                return
+                
+            # Reset file path since this is from clipboard
+            self.file_path = "Clipboard Image"
+            
+            # Reset data
+            self.profile_lines = {}
+            self.current_line_id = None
+            
+            # Create first line automatically
+            self.new_profile_line()
+            
+            # Apply any brightness/contrast adjustments
+            self.adjust_image()
+            
+            # Update display
+            self.update_image_display()
+            
+            # Update status
+            self.app.set_status("Pasted image from clipboard")
+            
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to paste image: {str(e)}")
+            traceback.print_exc()
     
     def create_chromatogram(self):
         """Create a new chromatogram tab using the current active line"""

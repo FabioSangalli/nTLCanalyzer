@@ -58,11 +58,15 @@ class TufteChromatogramApp(ttk.Window):
             icon_path = os.path.join("resources", "icon.ico")
             if not os.path.exists(icon_path):
                 create_icon_file(icon_path)
-                
-            # Set the icon
-            self.iconbitmap(icon_path)
-        except Exception:
-            pass  # Ignore icon errors
+            
+            # Ensure the icon file exists before setting it
+            if os.path.exists(icon_path):
+                # Set the icon
+                self.iconbitmap(icon_path)
+            else:
+                print("Warning: Icon file not found at", icon_path)
+        except Exception as e:
+            print(f"Error setting application icon: {e}")  # Log the error for debugging
         
         # Track tabs
         self.tab_counter = 0
@@ -271,10 +275,20 @@ class TufteChromatogramApp(ttk.Window):
         """
         new_theme = self.theme_var.get()
         if new_theme != self.theme:
+            # Ask user if they want to restart with a warning about data loss
+            restart = messagebox.askyesno("Theme Changed", 
+                                        f"Theme changed to {new_theme}. The application needs to restart for the change to take effect.\n\nWARNING: Any unsaved data will be lost. Do you want to restart now?")
+            
+            # Save the theme regardless of restart choice
             self.theme = new_theme
             self._save_theme(new_theme)
-            messagebox.showinfo("Theme Changed", 
-                              f"Theme changed to {new_theme}. Please restart the application for the change to take effect.")
+            
+            if restart:
+                # Destroy the current window
+                self.destroy()
+                
+                # Restart the application
+                self._restart_application()
     
     def _save_theme(self, theme_name):
         """Save theme preference to a config file
@@ -305,6 +319,32 @@ class TufteChromatogramApp(ttk.Window):
         except Exception as e:
             print(f"Error loading theme: {e}")
         return DEFAULT_THEME
+        
+    def _restart_application(self):
+        """Restart the application with the new theme
+        
+        This method will restart the application by executing the launcher.py script
+        """
+        try:
+            # Get the current working directory
+            cwd = os.getcwd()
+            
+            # Construct the path to the python executable in the virtual environment
+            venv_path = os.path.join(cwd, 'TLC')
+            python_executable = os.path.join(venv_path, 'Scripts', 'python.exe')
+            
+            # Check if the python executable exists
+            if not os.path.exists(python_executable):
+                # Fall back to system python if venv python doesn't exist
+                python_executable = sys.executable
+            
+            # Start a new process to run the launcher
+            subprocess.Popen([python_executable, os.path.join(cwd, 'launcher.py')])
+        except Exception as e:
+            messagebox.showerror("Restart Error", f"Failed to restart the application: {e}\n\nPlease restart manually.")
+        finally:
+            # Exit the current instance
+            sys.exit(0)
 
 def run_application():
     """Run the application"""

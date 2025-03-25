@@ -1,17 +1,20 @@
 # Chromatogram Analyzer
 
-A Python application for analyzing TLC (Thin Layer Chromatography) images and extracting quantitative data. The application features a customizable theme system with both light and dark themes.
+A Python application for analyzing TLC (Thin Layer Chromatography) images and extracting quantitative data. The application features a customizable theme system with both light and dark themes. It works with various staining methods including iodine, ninhydrin, UV, and other chemical stains commonly used in TLC.
 
 ## Features
 
-- Load and process chromatogram images
-- Draw multiple profile lines for analysis
-- Extract intensity profiles from images
-- Apply filters for signal processing
-- Detect peaks in chromatograms
-- Integrate peaks automatically or manually
+- Load and process chromatogram images from files or clipboard
+- Draw multiple profile lines for analysis with adjustable band width
+- Extract intensity profiles from images with various staining methods
+- Apply filters for signal processing (Savitzky-Golay, Gaussian smoothing)
+- Detect peaks in chromatograms with adjustable sensitivity
+- Integrate peaks automatically or manually with baseline correction
 - Fit peaks with Mecozzi asymmetric exponential function
-- Save and load analysis data
+- Compare multiple chromatograms in a single view
+- Adjust image brightness and contrast for better visualization
+- Save and load analysis data in various formats
+- Export results as CSV or images
 - Customizable UI with light and dark themes
 
 ## Installation
@@ -34,48 +37,96 @@ A Python application for analyzing TLC (Thin Layer Chromatography) images and ex
    python launcher.py
    ```
 
-2. Load an image using the "Open Image" button
-3. Add profile lines by clicking "New Line" and then clicking points on the image
-4. Extract profiles using "Extract & Analyze"
-5. Use the tools in the Analysis tab to:
-   - Apply filters to smooth the data
-   - Detect peaks 
-   - Integrate peaks
-   - Fit peaks with Mecozzi function
-6. Save your results using "Save Data"
+2. **Image Tab**: Load and prepare your TLC image
+   - Load an image using the "Open Image" button or paste from clipboard
+   - Adjust brightness and contrast as needed
+   - Add profile lines by clicking "New Line" and then clicking points on the image
+   - Adjust band width for optimal signal extraction
+   - Extract profiles using "Extract & Analyze"
+
+   ![Image Tab](screen/img_tab.png)
+
+3. **Chromatogram Tab**: Analyze extracted profiles
+   - Apply filters to smooth the data (Savitzky-Golay, Gaussian)
+   - Detect peaks with adjustable sensitivity
+   - Integrate peaks automatically or manually
+   - Fit peaks with Mecozzi asymmetric exponential function
+   - View quantitative results in the data table
+
+   ![Chromatogram Tab](screen/chromatogram.png)
+
+4. **Comparison Tab**: Compare multiple chromatograms
+   - Select profiles from different analyses
+   - Normalize and align chromatograms as needed
+   - Compare peak positions and intensities
+   - Export comparison data
+
+   ![Comparison Tab](screen/comparison.png)
+
+5. Save your results using "Save Data" in various formats
 
 ## Requirements
 
 - Python 3.6 or higher
-- NumPy
-- Matplotlib
-- OpenCV-Python
-- SciPy
-- Pandas
+- NumPy >= 1.20.0
+- Matplotlib >= 3.4.0
+- OpenCV-Python >= 4.5.0
+- SciPy >= 1.7.0
+- Pandas >= 1.3.0
+- llvmlite >= 0.39.0
+- numba >= 0.56.0
+- ttkbootstrap >= 1.10.1
+- Pillow >= 9.0.0
 
 ## Project Structure
 
 ```
 chromatogram-analyzer/
-├── launcher.py              # Entry point script
+├── launcher.py              # Entry point script with virtual environment management
+├── TLCImager.bat            # Windows batch file for easy launching
 ├── src/                     # Source code directory
 │   ├── __init__.py          # Package initialization
 │   ├── app.py               # Main application class
-│   ├── chromatogram_tab.py  # Tab implementation
+│   ├── chromatogram_tab.py  # Chromatogram analysis tab implementation
 │   ├── comparison_tab.py    # Comparison tab implementation
-│   ├── image_tab.py         # Image tab implementation
+│   ├── image_tab.py         # Image processing tab implementation
 │   ├── image_processing.py  # Image processing functions
 │   ├── peak_analysis.py     # Peak detection functions
 │   ├── integration.py       # Integration functionality
-│   ├── fitting.py           # Curve fitting functions
-│   ├── themes.py            # Theme management
+│   ├── fitting.py           # Curve fitting functions with Mecozzi algorithm
+│   ├── themes.py            # Theme management for UI customization
 │   └── utils.py             # Utility functions
 ├── resources/               # Resources directory
-│   ├── icon.ico             # Application icon
-│   └── config.json          # Configuration file (theme settings)
+│   ├── icon.ico             # Application icon/logo
+│   ├── config.json          # Configuration file (theme settings)
+│   └── package_cache.json   # Package installation cache
+├── screen/                  # Screenshots for documentation
+│   ├── img_tab.png          # Image tab screenshot
+│   ├── chromatogram.png     # Chromatogram tab screenshot
+│   └── comparison.png       # Comparison tab screenshot
 ├── .gitignore               # Git ignore file
+├── requirements.txt         # Python dependencies
 └── logs/                    # Log files directory
 ```
+
+## Technical Details
+
+### Image Processing
+- Supports various image formats (PNG, JPG, TIFF, BMP)
+- Handles different staining methods (iodine, ninhydrin, UV, fluorescence, etc.)
+- Adjustable band width for optimal signal extraction
+- Image enhancement with brightness/contrast controls
+
+### Chromatogram Analysis
+- Multiple smoothing algorithms (Savitzky-Golay, Gaussian)
+- Peak detection with adjustable sensitivity and threshold
+- Manual and automatic integration with baseline correction
+- Mecozzi asymmetric exponential function fitting for accurate quantification
+
+### Data Comparison
+- Overlay multiple chromatograms with individual color coding
+- Normalize data for easier comparison
+- Export comparison data in various formats
 
 ## License
 

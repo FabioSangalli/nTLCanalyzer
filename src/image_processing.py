@@ -7,6 +7,8 @@ intensity profiles from chromatogram images.
 
 import numpy as np
 import cv2
+from PIL import ImageGrab, Image
+import io
 
 def load_image(file_path):
     """
@@ -30,6 +32,32 @@ def load_image(file_path):
     rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     
     return rgb_image, rgb_image.copy()
+
+def load_image_from_clipboard():
+    """
+    Load an image from the system clipboard.
+    
+    Returns:
+        tuple: (rgb_image, original_image) - RGB image and original image, or (None, None) if no image in clipboard
+        
+    Raises:
+        ValueError: If the clipboard image cannot be processed
+    """
+    try:
+        # Get image from clipboard
+        clipboard_image = ImageGrab.grabclipboard()
+        
+        # Check if clipboard contains an image
+        if clipboard_image is None or not isinstance(clipboard_image, Image.Image):
+            return None, None
+        
+        # Convert PIL Image to numpy array (RGB format)
+        rgb_image = np.array(clipboard_image.convert('RGB'))
+        
+        return rgb_image, rgb_image.copy()
+        
+    except Exception as e:
+        raise ValueError(f"Failed to process clipboard image: {str(e)}")
 
 def adjust_image(image, brightness=0, contrast=1):
     """
