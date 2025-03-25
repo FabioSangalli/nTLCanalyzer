@@ -131,7 +131,7 @@ chromatogram-analyzer/
 
 ## License
 
-[GNU/GPL v3 License](LICENSE)
+[GNU/GPL v3 License](https://www.gnu.org/licenses/gpl-3.0.html)
 
 ## Contributing
 
