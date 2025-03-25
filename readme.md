@@ -36,6 +36,7 @@ A Python application for analyzing TLC (Thin Layer Chromatography) images and ex
    ```
    python launcher.py
    ```
+   On windows you can run TLCImager.bat.
 
 2. **Image Tab**: Load and prepare your TLC image
    - Load an image using the "Open Image" button or paste from clipboard
@@ -113,7 +114,7 @@ chromatogram-analyzer/
 
 ### Image Processing
 - Supports various image formats (PNG, JPG, TIFF, BMP)
-- Handles different staining methods (iodine, ninhydrin, UV, fluorescence, etc.)
+- For my experimentation it work with different stains (UV, fluorescence, Ce-Mo or Mo stain, KMnO4 etc.)
 - Adjustable band width for optimal signal extraction
 - Image enhancement with brightness/contrast controls
 
@@ -130,7 +131,7 @@ chromatogram-analyzer/
 
 ## License
 
-[MIT License](LICENSE)
+[GNU/GPL v3 License](LICENSE)
 
 ## Contributing
 
